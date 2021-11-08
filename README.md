@@ -36,11 +36,14 @@ If your NASM location on disk is not "C:\nasm\nasm.exe" - please change the path
 * BIOS disk hypercall for emulators
 * SPI mode SD-card support on FPGA boards
 * Very simplified USB HID device support on FPGA boards
+* Good for a systems without video adapter
+* Customizable SPI/USB drivers
 
 ### Known problems
 * No 32-bit functions
+* No hardware detection / setup (to save ROM space)
 * No extended memory test
-* Due to very incomplete realization of int 15h some PC diagnostic programs will show memory size error
+* Due to a very incomplete realization of int 15h some PC diagnostic programs will show memory size error
 * Int 13h (BIOS disk) supports only reset/read/write functions
 * No NVRAM/RTC support
 * Internal video BIOS doesn't support printing chars in graphic mode
