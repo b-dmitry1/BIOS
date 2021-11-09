@@ -181,5 +181,7 @@ hid_mouse_errors:
 video_attr:
 	db 7
 
+bios_temp:
+	dw 0, 0			; temporary data buffer
 
 bios_data_end:

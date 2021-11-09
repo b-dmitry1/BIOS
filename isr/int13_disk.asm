@@ -1,14 +1,19 @@
-	; Disk BIOS
+; Disk BIOS
+;
 
 %if (USE_SPI_SDCARD)
-%include "isr\int13_spi_sdcard.asm"
+%include "drivers\sdcard.asm"
+%endif
+
+%if (USE_IDE_HDD == 1)
+%include "drivers\ide.asm"
 %endif
 
 int13:
-%ifdef HYPER_13H
-	db 0xFF, 0xFF, 0x13
+%if (HYPER_13H == 1)
+%include "drivers\hdd_hyper.asm"
 	iret
-%endif
+%else
 	; Set interrupt flag to make MS-DOS work
 	push bp
 	mov bp, sp
@@ -85,7 +90,7 @@ int13_no_drive:
 	jmp iret_carry
 
 int13_reset:
-	; Reset drive
+	; Reset the drive
 	cmp dl, 0x80
 	jne int13_not_ready
 	jmp int13_success
@@ -121,6 +126,19 @@ int13_read:
 	jne int13_read_check_al_done
 	mov al, 1
 int13_read_check_al_done:
+
+%if (USE_IDE_HDD == 1)
+	push ax
+	push bx
+	push cx
+	push dx
+	call ide_read
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	jmp int13_success
+%else
 	push bx
 	push cx
 	push dx
@@ -139,7 +157,9 @@ int13_read_check_al_done:
 	jmp sd_read
 %endif
 
+%endif
 	jmp int13_not_ready
+
 
 ; int13_03
 ; Disk write
@@ -162,6 +182,19 @@ int13_write:
 	jne int13_write_check_al_done
 	mov al, 1
 int13_write_check_al_done:
+
+%if (USE_IDE_HDD == 1)
+	push ax
+	push bx
+	push cx
+	push dx
+	call ide_write
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	jmp int13_success
+%else
 	push bx
 	push cx
 	push dx
@@ -179,7 +212,7 @@ int13_write_check_al_done:
 %if (USE_SPI_SDCARD == 1)
 	jmp sd_write
 %endif
-
+%endif	; USE_IDE_HDD
 	jmp int13_not_ready
 
 ; int13_04
@@ -300,3 +333,5 @@ int13_calc_lba:
 	adc dx, 0       ; DX:AX = lba32
 
 	ret
+
+%endif	; hypercall

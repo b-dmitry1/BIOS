@@ -148,17 +148,42 @@ erase_ints2:
 	mov al, '4'
 	out DEBUG_UART, al
 
-	; Before this point there were only writes to RAM
-	; Now we should try to read
+	; Display 'R' on the left top corner of the screen
+	mov ax, 0xB800
+	mov ds, ax
+	mov word [0], 0x0F00 + 'R'
 
-	; If your RAM controller is not working properly
-	; you will see "1234" in the debug console and the system
-	; will hang or restart
+
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	; Before this point there were only writes to RAM                  ;
+	; Now we should try to read                                        ;
+	                                                                   ;
+	; If your RAM controller is not working properly                   ;
+	; or add-on ROM chips generate an error                            ;
+	; you will see "1234" in the debug console and 'R' in the left top ;
+	; corner of the screen and the system will hang or restart         ;
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 	; Check if we have additional BIOS chips
-	; TODO: replace hard-coded address with extension ROM scan
-%if (USE_OEM_VIDEO == 1)
-	call (0xC000):0x0002
+%if (USE_ADDON_ROMS == 1)
+	mov ax, 0x40
+	mov ds, ax
+	mov word [bios_temp + 2], 0xC000
+	mov word [bios_temp], 2
+scan_roms:
+	mov ax, [bios_temp + 2]
+	mov es, ax
+	cmp [es:0], word 0xAA55
+	jnz no_rom
+	call far [bios_temp]
+no_rom:
+	mov ax, 0x40
+	mov ds, ax
+	mov ax, 0x1000
+	add [bios_temp + 2], ax
+	cmp word [bios_temp + 2], 0xF000
+	jnz scan_roms
 %endif
 
 	; Set text 80x25 video mode using video BIOS
@@ -247,6 +272,10 @@ begin_memory_test:
 
 	mov ax, 0x0000
 	mov es, ax
+
+%if (RUN_ROM_BASIC == 1)
+	jmp (0xF600):0
+%endif
 
 %if (USE_SPI_SDCARD == 1)
 	; Try to find and initialize SD-card
