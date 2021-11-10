@@ -1,4 +1,4 @@
-### x86 embedded BIOS
+### x86 embedded BIOS R2
 Very compact (less than 8KB of ROM space) x86 BIOS for embedded systems, FPGA and emulators.
 
 Tested with hardware:
@@ -32,12 +32,13 @@ If your NASM location on disk is not "C:\nasm\nasm.exe" - please change the path
 * Lower memory test with continuous mode to help debugging FPGA SDRAM controller
 * Very compact Video BIOS
 * Minimal SVGA functionality enough to run hi-res games like "Heroes Of Might and Magic" and "Transport Tycoon"
-* Support add-on ROM chips (see config.inc)
+* Supports add-on ROM chips (see config.inc)
 * BIOS disk hypercall for emulators
 * SPI mode SD-card support on FPGA boards
-* Very simplified USB HID device support on FPGA boards
+* Very simplified USB HID device support for FPGA boards
 * Good for a systems without video adapter
 * Customizable SPI/USB drivers
+* A20 line and PLL control (frequency multiplier for 486)
 
 ### Known problems
 * No 32-bit functions
@@ -46,6 +47,6 @@ If your NASM location on disk is not "C:\nasm\nasm.exe" - please change the path
 * Due to a very incomplete realization of int 15h some PC diagnostic programs will show memory size error
 * Int 13h (BIOS disk) supports only reset/read/write functions
 * No NVRAM/RTC support
-* Internal video BIOS doesn't support printing chars in graphic mode
+* Internal video BIOS doesn't support printing text in graphic mode
 * Video adapter initialization incomplete so will not work properly with real VGA chips without OEM BIOS
-* No SMM mode so 32-bit software cannot use FPGA SD-card and USB controller
+* The SMM mode driver cannot fit in 8K so 32-bit pmode software cannot use FPGA's simple SD-card and USB controller
