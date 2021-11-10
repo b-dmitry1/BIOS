@@ -1,7 +1,7 @@
 ### x86 embedded BIOS R2
 Very compact (less than 8KB of ROM space) x86 BIOS for embedded systems, FPGA and emulators.
 
-Tested with hardware:
+Tested with a hardware:
 * Original Intel 8086 CPU
 * Harris 80286 CPU
 * Intel 80386SX25 CPU
@@ -9,14 +9,17 @@ Tested with hardware:
 * Cyrix Cx486SLC-V25 CPU
 * Texas Instruments TI486SXLC2-G50 CPU
 
+Tested with an emulators:
+* Bochs 2.6.11 (require USE_ADDON_ROMS and USE_IDE_HDD in "config.inc" to use Bochs's Video BIOS and HDD)
+
 ![FPGA board with TI486](https://github.com/b-dmitry1/BIOS/blob/main/BoardTI486.jpg)
 
-Tested with software:
+Tested with a software:
 * MS-DOS 3.3, 4.0, 6.6
 * Windows 1.0, 2.0, 3.1, 95
 * Linux 0.01, 1.3.89
 * Minix 1.x, 2.x
-* Most of DOS software and games working good
+* Most of DOS/Windows software and games working good
 
 ### Compiling on Windows machine
 
