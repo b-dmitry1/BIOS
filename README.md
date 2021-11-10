@@ -41,12 +41,9 @@ If your NASM location on disk is not "C:\nasm\nasm.exe" - please change the path
 * A20 line and PLL control (frequency multiplier for 486)
 
 ### Known problems
-* No 32-bit functions
-* No hardware detection / setup (to save ROM space)
+* No hardware detection / BIOS setup (to save ROM space)
 * No extended memory test
-* Due to a very incomplete realization of int 15h some PC diagnostic programs will show memory size error
 * Int 13h (BIOS disk) supports only reset/read/write functions
 * No NVRAM/RTC support
 * Internal video BIOS doesn't support printing text in graphic mode
-* Video adapter initialization incomplete so will not work properly with real VGA chips without OEM BIOS
-* The SMM mode driver cannot fit in 8K so 32-bit pmode software cannot use FPGA's simple SD-card and USB controller
+* Video adapter initialization incomplete so will not work properly with a real VGA chips without OEM BIOS
