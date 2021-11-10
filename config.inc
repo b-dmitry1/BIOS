@@ -1,4 +1,14 @@
 
+; CPU types
+%define CPU_X86			0
+%define CPU_386EX		1
+%define CPU_CX486		2
+%define CPU_TI486               3
+
+; Set CPU type here
+%define CPU			CPU_X86
+
+
 
 ; Extended RAM size in KB
 %define EXT_RAM_SIZE		7168
@@ -45,6 +55,7 @@
 %define CLEAR_HMA		0
 
 ; Set to 1 if you need A20 enabled
+; Some of old DOS packed EXEs will not work with A20 enabled
 %define LEAVE_A20_ENABLED	1
 
 ; Set to 1 if you don't need cga glyphs
@@ -60,4 +71,14 @@
 
 ; Set to 1 if you don't need mouse report from FPGA USB controller
 %define FPGA_USB_NO_MOUSE	0
+
+
+
+; Set to 1 if your CPU contains PLL (clock multiplier)
+; Please activate only if your system working good at normal speed
+%define ACTIVATE_PLL		0
+
+
+; Set to 1 if your CPU contains cache memory and you need to enable it
+%define ENABLE_CACHE		0
 

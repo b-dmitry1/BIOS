@@ -25,6 +25,10 @@ start:
 	cli
 	cld
 
+	; If we have 386EX CPU we may need to program Chip Select Unit
+	; as soon as possible
+%include "drivers\chipselect.asm"
+
 	; Setup segments
 	mov ax, 0x40
 	mov ds, ax
@@ -47,6 +51,11 @@ start:
 	retf
 
 normal_restart:
+
+	; Send '1' to debug port to notify that BIOS and debug console both working
+	mov al, '1'
+	out DEBUG_UART, al
+
 	; Setup stack
 	xor ax, ax
 	mov ss, ax
@@ -56,33 +65,11 @@ normal_restart:
 	mov al, 3
 	out PORT_VMODE, al
 
-	; Send '1' to debug port to notify that BIOS and debug console both working
-	mov al, '1'
-	out DEBUG_UART, al
-
 	; Set interrupt controller (PICs 8259) registers
 %include "drivers\pic.asm"
 	
 	; Send '2' to debug port to notify that PIC initialized
 	mov al, '2'
-	out DEBUG_UART, al
-
-%if (CLEAR_HMA)
-	; Need to clear HMA
-	; Enable A20
-	mov al, 2
-	out 0x92, al
-	; Fill
-	mov ax, 0xFFFF
-	mov es, ax
-	mov di, 0x10
-	mov cx, 32768 - 8
-	xor ax, ax
-	rep stosw
-%endif
-
-	; Send '3' to debug port to notify that all going ok
-	mov al, '3'
 	out DEBUG_UART, al
 
 	; Create an empty interrupt table
@@ -143,15 +130,14 @@ erase_ints2:
 	mov cx, 0x100 + bios_data_end - bios_data + 1
 	rep movsb
 
-	; Send '4' to debug port to notify that we are going to use
-	; stack, interrupts and read from RAM
-	mov al, '4'
-	out DEBUG_UART, al
-
 	; Display 'R' on the left top corner of the screen
 	mov ax, 0xB800
 	mov ds, ax
 	mov word [0], 0x0F00 + 'R'
+
+	; Send '3' to debug port to notify that all going ok
+	mov al, '3'
+	out DEBUG_UART, al
 
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -160,7 +146,7 @@ erase_ints2:
 	                                                                   ;
 	; If your RAM controller is not working properly                   ;
 	; or add-on ROM chips generate an error                            ;
-	; you will see "1234" in the debug console and 'R' in the left top ;
+	; you will see "123" in the debug console and 'R' in the left top  ;
 	; corner of the screen and the system will hang or restart         ;
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -186,10 +172,15 @@ no_rom:
 	jnz scan_roms
 %endif
 
-	; Set text 80x25 video mode using video BIOS
-	mov ax, 0x03
-	int 0x10
+	; Send '4' to debug port to notify that we are going to use
+	; stack, interrupts and read from RAM
+	mov al, '4'
+	out DEBUG_UART, al
 
+	; Set the text mode normal way	
+	mov ax, 3
+	int 0x10
+	
 	; Send '5' to debug port to notify that RAM is working properly
 	mov al, '5'
 	out DEBUG_UART, al
@@ -202,6 +193,9 @@ no_rom:
 	; Display welcome message
 	mov si, msg_reset
 	call putsv
+
+	; Enable A31..A20 lines
+	call a20_enable
 
 	; Check BIOS parameter block alignment
 %if ((check_size - bios_data) != 0xA8)
@@ -216,6 +210,17 @@ no_rom:
 	call putchv
 	mov al, 10
 	call putchv
+
+
+
+	; This is a good place to activate CPU's PLL to run at full speed
+	; The memory test performed at the next step will help to check
+	; system stability in a full speed mode
+%if (ACTIVATE_PLL == 1)
+%include "drivers\pll.asm"
+	call pll_enable
+%endif
+
 
 %if (RAM_TEST == 1)
 	; Perform 0 - 640 KB RAM test
@@ -236,6 +241,15 @@ begin_memory_test:
 	mov al, 10
 	call putchv
 %endif
+
+
+	; Memory test OK, so now we can enable CPU's cache
+%if (ENABLE_CACHE == 1)
+
+%include "drivers\cache.asm"
+	call cache_enable
+%endif
+
 
 
 	; Timer 1: 15 us / 0x12
@@ -268,6 +282,21 @@ begin_memory_test:
 	out 0x40, al
 	out 0x40, al
 
+
+	; Ok, lets try to initialize FPGA's USB1 and USB2 for keyboard and mouse
+%if (USE_COMPACT_FPGA_USB == 1)
+	mov si, msg_usb1_init
+	call putsv
+	call usb1_init
+	mov si, msg_ok
+	call putsv
+	mov si, msg_usb2_init
+	call putsv
+	call usb1_init
+	mov si, msg_ok
+	call putsv
+%endif
+
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	mov ax, 0x0000
@@ -276,6 +305,19 @@ begin_memory_test:
 %if (RUN_ROM_BASIC == 1)
 	jmp (0xF600):0
 %endif
+
+
+%if (CLEAR_HMA)
+	; Need to clear HMA
+	mov ax, 0xFFFF
+	mov es, ax
+	mov di, 0x10
+	mov cx, 32768 - 8
+	xor ax, ax
+	rep stosw
+%endif
+
+
 
 %if (USE_SPI_SDCARD == 1)
 	; Try to find and initialize SD-card
@@ -332,14 +374,9 @@ begin_memory_test:
 	out 0x20, al
 	sti
 
-%if (LEAVE_A20_ENABLED == 1)
-	; Enable A20
-	mov al, 0x02
-	out 0x92, al
-%else
+%if (LEAVE_A20_ENABLED != 1)
 	; Disable A20
-	mov al, 0x00
-	out 0x92, al
+	call a20_disable
 %endif
 
 	; Set general register default values
@@ -504,10 +541,9 @@ empty_int:
 ; SPI controller for SD-card or W25Q128 flash ROM
 %include "drivers\spi.asm"
 
-
 ; BIOS messages
 msg_reset:
-	db "x86 embedded BIOS", 13, 10, "github.com/b-dmitry1/BIOS", 13, 10, 0
+	db "x86 embedded BIOS R2", 13, 10, "github.com/b-dmitry1/BIOS", 13, 10, 0
 
 msg_usb1_init:
 	db "USB 1 init", 0

@@ -11,6 +11,8 @@
 
 %define ENABLE_WHEEL_SCROLL
 
+%define KEYB_FIFO			0x98
+
 	; USB HID 20 ms timer
 intUSB:
 	push ax

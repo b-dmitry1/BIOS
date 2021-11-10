@@ -28,3 +28,5 @@
 	out 0xA0, al
 	mov al, 0x08	; OCW3: reset OCW3
 	out 0xA0, al
+
+; No return from here (inline code!)

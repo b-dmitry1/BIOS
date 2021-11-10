@@ -158,8 +158,8 @@ check_size:
 	dw 0, 0			; 0xA8 - Display Combination Code table address
 
 ; Our parameters
-a20_state:
-	db 1			; Buffer for A20 state
+reserved:
+	db 0			; Reserved
 sd_block:
 	db 0			; SD block mode indicator
 hid_keyb_state:

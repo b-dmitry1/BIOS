@@ -2,6 +2,8 @@
 	; Designed for use with FPGA / emulator and
 	; Intel 386EX / Texas Instruments 486 / Cyrix 486 CPUs
 
+%include "drivers\a20.asm"
+
 int15:
 	cmp ah, 0x24
 	je int15_a20
@@ -32,63 +34,24 @@ int15_a20:
 
 int15_a20_disable:
 	push ax
-	mov al, 0
-	out 0x92, al
-
-	; Cx486
-	mov al, 0xC0
-	out 0x22, al
-	mov al, 0x02
-	out 0x23, al
-
-	push bx
-	push ds
-	mov bx, 0x40
-	mov ds, bx
-	mov byte [a20_state], 0
-	pop ds
-	pop bx
-
+	call a20_disable
 	pop ax
+
 	xor ah, ah
 	clc
 	jmp iret_carry
 
 int15_a20_enable:
 	push ax
-	mov al, 2
-	out 0x92, al
-
-	mov al, 0xC0
-	out 0x22, al
-	mov al, 0x02
-	out 0x23, al
-
-	push bx
-	push ds
-	mov bx, 0x40
-	mov ds, bx
-	mov byte [a20_state], 1
-	pop ds
-	pop bx
-
+	call a20_enable
 	pop ax
+
 	xor ah, ah
 	clc
 	jmp iret_carry
 
 int15_a20_get:
-	in al, 0x92
-	shr al, 1
-	and al, 1
-
-	push bx
-	push ds
-	mov bx, 0x40
-	mov ds, bx
-	mov al, [a20_state]
-	pop ds
-	pop bx
+	call a20_get
 
 	xor ah, ah
 	clc
@@ -96,7 +59,13 @@ int15_a20_get:
 
 int15_a20_get_support:
 	xor ah, ah
+%if ((CPU == CPU_CX486) || (CPU == CPU_TI486))
+	; No switch via port 0x92 support
+	mov bx, 0
+%else
+	; Can use port 0x92
 	mov bx, 0x02
+%endif
 	clc
 	jmp iret_carry
 
