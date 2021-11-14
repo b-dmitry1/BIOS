@@ -1,5 +1,5 @@
 ### x86 embedded BIOS R2
-Very compact (less than 8KB of ROM space) x86 BIOS for embedded systems, FPGA and emulators.
+Very compact (less than 8KB of ROM space) x86 BIOS for embedded systems, FPGA, and emulators.
 
 Tested with a hardware:
 * Original Intel 8086 CPU
@@ -15,7 +15,7 @@ Tested with an emulators:
 ![FPGA board with TI486](https://github.com/b-dmitry1/BIOS/blob/main/BoardTI486.jpg)
 
 Tested with a software:
-* MS-DOS 3.3, 4.0, 6.6
+* MS-DOS 3.3, 4.0, 6.22
 * Windows 1.0, 2.0, 3.1, 95
 * Linux 0.01, 1.3.89
 * Minix 1.x, 2.x
@@ -47,6 +47,5 @@ If your NASM location on disk is not "C:\nasm\nasm.exe" - please change the path
 * No hardware detection / BIOS setup (to save ROM space)
 * No extended memory test
 * Int 13h (BIOS disk) supports only reset/read/write functions
-* No NVRAM/RTC support
 * Internal video BIOS doesn't support printing text in graphic mode
 * Video adapter initialization incomplete so will not work properly with a real VGA chips without OEM BIOS
