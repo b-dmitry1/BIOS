@@ -10,15 +10,15 @@
 %endif
 
 int13:
-%if (HYPER_13H == 1)
-%include "drivers\hdd_hyper.asm"
-	iret
-%else
 	; Set interrupt flag to make MS-DOS work
 	push bp
 	mov bp, sp
 	or word [bp+6], 0x0200
 	pop bp
+%if (HYPER_13H == 1)
+%include "drivers\hdd_hyper.asm"
+	iret
+%else
 
 	cld
 

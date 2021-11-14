@@ -14,10 +14,10 @@
 %define EXT_RAM_SIZE		7168
 
 ; Set to 1 if you have OEM video BIOS or ROM BIOS extension chips
-%define USE_ADDON_ROMS		0
+%define USE_ADDON_ROMS		1
 
 ; Set to 1 to enable RAM test
-%define RAM_TEST		0
+%define RAM_TEST		1
 
 ; Set to 1 to enable continuous RAM test to check system stability
 %define CONTINUOUS_RAM_TEST	0
@@ -30,6 +30,8 @@
 ; HDD cylinder count
 ; HDD size: HDD_CYLINDERS * 16 * 63 * 512 bytes
 %define HDD_CYLINDERS		203
+%define HDD_HEADS		16
+%define HDD_SECTORS		63
 
 ; Boot drive:
 ; 0x00 - drive A: (floppy 0)
@@ -38,10 +40,10 @@
 
 ; Set to enable disk BIOS hyper call
 ; Emulator use only! All int 13h code will be removed
-%define HYPER_13H		1
+%define HYPER_13H		0
 
 ; Set to enable IDE HDD controller
-%define USE_IDE_HDD		0
+%define USE_IDE_HDD		1
 
 ; Set to 1 if SPI SD-card is used
 %define USE_SPI_SDCARD		0

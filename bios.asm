@@ -39,12 +39,21 @@ start:
 	or ax, [pmode_exit_ip]
 	jz normal_restart
 
-	; TODO: Need to check NVRAM also for a protected mode exit flag
-
 	; Zero values or the system will not restart properly
 	mov word [pmode_exit_cs], 0
 	mov word [pmode_exit_ip], 0
 
+	; Check NVRAM for a protected mode exit flag
+	mov al, 0x0F
+	out 0x70, al
+	jmp $+2
+	in al, 0x71
+	cmp al, 0x5
+	je pmode_exit
+	cmp al, 0xA
+	jne normal_restart
+
+pmode_exit:
 	; Resume execution in real mode	
 	push word [pmode_exit_cs]
 	push word [pmode_exit_ip]
@@ -402,7 +411,7 @@ begin_memory_test:
 ; In:
 ;   BP - random value
 
-%ifdef RAM_TEST
+%if (RAM_TEST == 1)
 memory_test:
 	mov si, msg_testingmemory
 	call putsv
@@ -477,6 +486,7 @@ memory_test_fail:
 	cli
 	jmp $
 %endif
+
 
 ; Interrupt return with Z or C flag set/reset
 iret_carry_on:
@@ -657,17 +667,17 @@ int41:
 hdd_cyls:
 	dw HDD_CYLINDERS - 1	; Number of cyls minus 1
 hdd_heads:
-	db 15	; Number of heads minus 1
-	dw 0
-	dw 0
-	db 0
-	db 0xC0
-	db 0
-	db 0
-	db 0
-	dw 0
+	db HDD_HEADS - 1	; Number of heads minus 1
+	dw 0                    ; Starting reduced-write current cylinder
+	dw 0                    ; Starting write precompensation cylinder
+	db 0                    ; Maximum ECC data burst length
+	db 0xC0                 ; Disable retries (bit 7), Disable ECC (bit 6)
+	db 0                    ; Standard timeout value
+	db 0                    ; Timeout value for format drive
+	db 0                    ; Timeout value for check drive
+	dw 0                    ; Reserved
 hdd_sectors:
-	db 63	; Sectors per track
+	db HDD_SECTORS		; Sectors per track
 	db 0
 
 

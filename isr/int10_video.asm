@@ -184,6 +184,8 @@ putch:
 	jg putch_graphic
 
 	push ax
+	push bx
+	push cx
 	push dx
 	push di
 
@@ -201,6 +203,8 @@ putch_done:
 
 	pop di
 	pop dx
+	pop cx
+	pop bx
 	pop ax
 
 	jmp int10_done
@@ -222,6 +226,8 @@ putcha:
 	mov [video_attr], bl
 
 	push ax
+	push bx
+	push cx
 	push dx
 	push di
 
@@ -240,6 +246,8 @@ putcha_done:
 
 	pop di
 	pop dx
+	pop cx
+	pop bx
 	pop ax
 
 	jmp int10_done
@@ -730,9 +738,9 @@ backspace:
 	add ax, dx
 	shl ax, 1
 	mov di, ax
-	mov ah, 7
 	mov al, ' '
-	mov [es:di], ax
+	; Should we?
+	; mov [es:di], al
 	pop di
 	pop dx
 	pop ax
@@ -1085,8 +1093,8 @@ int10_svga_get_mode_info:
 
 	; Set 640x480x256 video mode here because some games
 	; for some reason don't use 0x4F02 function
-	mov al, 0x14
-	out PORT_VMODE, al
+	;mov al, 0x14
+	;out PORT_VMODE, al
 
 	; Mode supported (0), TTY not supported (2), color (3)
 	; Graphic (4), VGA-compatible (5), windowed mode only (6-7)

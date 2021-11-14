@@ -62,5 +62,10 @@ int06:
 	jmp trap
 
 int07:
+	push bp
+	mov bp, sp
+	add word [bp + 2], 2
+	pop bp
+	iret
 	mov bl, 'E'
 	jmp trap
