@@ -189,7 +189,7 @@ no_rom:
 	; Set the text mode normal way	
 	mov ax, 3
 	int 0x10
-	
+
 	; Send '5' to debug port to notify that RAM is working properly
 	mov al, '5'
 	out DEBUG_UART, al
@@ -553,7 +553,7 @@ empty_int:
 
 ; BIOS messages
 msg_reset:
-	db "x86 embedded BIOS R2", 13, 10, "github.com/b-dmitry1/BIOS", 13, 10, 0
+	db "x86 embedded BIOS R3", 13, 10, "github.com/b-dmitry1/BIOS", 13, 10, 0
 
 msg_usb1_init:
 	db "USB 1 init", 0

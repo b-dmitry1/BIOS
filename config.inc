@@ -14,10 +14,10 @@
 %define EXT_RAM_SIZE		7168
 
 ; Set to 1 if you have OEM video BIOS or ROM BIOS extension chips
-%define USE_ADDON_ROMS		1
+%define USE_ADDON_ROMS		0
 
 ; Set to 1 to enable RAM test
-%define RAM_TEST		1
+%define RAM_TEST		0
 
 ; Set to 1 to enable continuous RAM test to check system stability
 %define CONTINUOUS_RAM_TEST	0
@@ -63,8 +63,6 @@
 ; Set to 1 if you don't need cga glyphs
 ; This will save 1 KB of ROM
 %define NO_CGA_GLYPHS		0
-
-
 
 ; Set to 1 if a very simple FPGA USB controller is used
 %define USE_COMPACT_FPGA_USB	0
