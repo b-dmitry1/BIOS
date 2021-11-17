@@ -1,4 +1,4 @@
-### x86 embedded BIOS R2
+### x86 embedded BIOS R3
 Very compact (less than 8KB of ROM space) x86 BIOS for embedded systems, FPGA, and emulators.
 
 Tested with a hardware:
