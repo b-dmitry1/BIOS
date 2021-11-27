@@ -49,3 +49,7 @@ If your NASM location on disk is not "C:\nasm\nasm.exe" - please change the path
 * Int 13h (BIOS disk) supports only reset/read/write functions
 * Internal video BIOS doesn't support printing text in graphic mode
 * Video adapter initialization incomplete so will not work properly with a real VGA chips without OEM BIOS
+
+The project is provided "as is" without any warranty. Use at your own risk.
+
+Please tell me if you find some bug or if you plan to use it with a physical hardware.
