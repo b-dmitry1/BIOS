@@ -43,13 +43,14 @@ If your NASM location on disk is not "C:\nasm\nasm.exe" - please change the path
 * Customizable SPI/USB drivers
 * A20 line and PLL control (frequency multiplier for 486)
 
-### Known problems
+### Known issues
 * No hardware detection / BIOS setup (to save ROM space)
 * No extended memory test
 * Int 13h (BIOS disk) supports only reset/read/write functions
 * Internal video BIOS doesn't support printing text in graphic mode
 * Video adapter initialization incomplete so will not work properly with a real VGA chips without OEM BIOS
 
+### Disclaimer
 The project is provided "as is" without any warranty. Use at your own risk.
 
-Please tell me if you find some bug or if you plan to use it with a physical hardware.
+Please contact me if you find any bug or if you plan to use it with a physical hardware.
