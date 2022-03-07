@@ -9,6 +9,8 @@ Tested with a hardware:
 * Cyrix Cx486SLC-V25 CPU
 * Texas Instruments TI486SXLC2-G50 CPU
 
+Some board images could be found in the [pictures directory](pictures).
+
 Tested with an emulators:
 * Bochs 2.6.11 (require USE_ADDON_ROMS and USE_IDE_HDD in "config.inc" to use Bochs's Video BIOS and HDD)
 
