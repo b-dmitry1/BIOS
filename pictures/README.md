@@ -8,11 +8,11 @@ Here are some photos of devices that I created during the development of this pr
 
 Top layer:
 
-![Harris 286 top](pictures/IMG20220207130038.jpg)
+![Harris 286 top](IMG20220207130038.jpg)
 
 Bottom layer:
 
-![Harris 286 bottom](pictures/IMG20220207130052.jpg)
+![Harris 286 bottom](IMG20220207130052.jpg)
 
 
 - CPU: Intel KU80386EX TB (3.3V version) @ 25 MHz
@@ -22,4 +22,4 @@ Bottom layer:
 - Interfaces: 1 x VGA, 2 x PS/2, 1 x SPI, 2 x RS232 (TTL), 1 x HDMI
 - Disk: MMC via SPI
 
-![i386 top](pictures/IMG20220207130113.jpg)
+![i386 top](IMG20220207130113.jpg)
