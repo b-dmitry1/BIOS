@@ -52,7 +52,3 @@ If your NASM location on disk is not "C:\nasm\nasm.exe" - please change the path
 * Internal video BIOS doesn't support printing text in graphic mode
 * Video adapter initialization incomplete so will not work properly with a real VGA chips without OEM BIOS
 
-### Disclaimer
-The project is provided "as is" without any warranty. Use at your own risk.
-
-Please contact me if you find any bug or if you plan to use it with a physical hardware.
