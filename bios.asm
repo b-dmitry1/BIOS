@@ -165,7 +165,7 @@ erase_ints2:
 	mov ax, 0x40
 	mov ds, ax
 	mov word [bios_temp + 2], 0xC000
-	mov word [bios_temp], 2
+	mov word [bios_temp], 3
 scan_roms:
 	mov ax, [bios_temp + 2]
 	mov es, ax
@@ -620,7 +620,7 @@ video_static_table:
 	dd 0 	; IBM reserved
 	db 0x07 ; scan lines suppported: bit 0 = 200, 1 = 350, 2 = 400
 	db 0x08 ; font blocks available in text mode (4 = EGA, 8 = VGA)
-	db 0x02 ; maximum active font blocks in text mode (2 = EGA или VGA)
+	db 0x02 ; maximum active font blocks in text mode (2 = EGA пїЅпїЅпїЅ VGA)
 	db 0xfd ; misc support flags
 	db 0x08	; misc capabilities (DCC support)
 	dw 0x00 ; reserved
