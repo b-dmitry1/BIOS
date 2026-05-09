@@ -2,7 +2,7 @@
 	; Designed for use with FPGA / emulator and
 	; Intel 386EX / Texas Instruments 486 / Cyrix 486 CPUs
 
-%include "drivers\a20.asm"
+%include "drivers/a20.asm"
 
 int15:
 	cmp ah, 0x24

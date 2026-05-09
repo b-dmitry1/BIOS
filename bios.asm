@@ -12,7 +12,7 @@ image_start:
 
 ; BIOS parameter block
 ; Do not move!
-%include "data\biosdata.asm"
+%include "data/biosdata.asm"
 
 	align 8
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -27,7 +27,7 @@ start:
 
 	; If we have 386EX CPU we may need to program Chip Select Unit
 	; as soon as possible
-%include "drivers\chipselect.asm"
+%include "drivers/chipselect.asm"
 
 	; Setup segments
 	mov ax, 0x40
@@ -75,7 +75,7 @@ normal_restart:
 	out PORT_VMODE, al
 
 	; Set interrupt controller (PICs 8259) registers
-%include "drivers\pic.asm"
+%include "drivers/pic.asm"
 	
 	; Send '2' to debug port to notify that PIC initialized
 	mov al, '2'
@@ -226,7 +226,7 @@ no_rom:
 	; The memory test performed at the next step will help to check
 	; system stability in a full speed mode
 %if (ACTIVATE_PLL == 1)
-%include "drivers\pll.asm"
+%include "drivers/pll.asm"
 	call pll_enable
 %endif
 
@@ -255,7 +255,7 @@ begin_memory_test:
 	; Memory test OK, so now we can enable CPU's cache
 %if (ENABLE_CACHE == 1)
 
-%include "drivers\cache.asm"
+%include "drivers/cache.asm"
 	call cache_enable
 %endif
 
@@ -403,8 +403,8 @@ begin_memory_test:
 %include "console.asm"
 
 %if (USE_COMPACT_FPGA_USB == 1)
-%include "drivers\compact_fpga_usb.asm"
-%include "drivers\compact_fpga_hid.asm"
+%include "drivers/compact_fpga_usb.asm"
+%include "drivers/compact_fpga_hid.asm"
 %endif
 
 ; Memory test
@@ -532,24 +532,24 @@ empty_hw_int:
 empty_int:
 	iret
 
-%include "isr\traps.asm"
+%include "isr/traps.asm"
 
-%include "isr\int08_timer.asm"
-%include "isr\int09_keyboard.asm"
-%include "isr\int0c_comm.asm"
-%include "isr\int10_video.asm"
-%include "isr\int11.asm"
-%include "isr\int12.asm"
-%include "isr\int13_disk.asm"
-%include "isr\int14_comm.asm"
-%include "isr\int15_at.asm"
-%include "isr\int16_keyboard.asm"
-%include "isr\int17.asm"
-%include "isr\int19.asm"
-%include "isr\int1a_rtc.asm"
+%include "isr/int08_timer.asm"
+%include "isr/int09_keyboard.asm"
+%include "isr/int0c_comm.asm"
+%include "isr/int10_video.asm"
+%include "isr/int11.asm"
+%include "isr/int12.asm"
+%include "isr/int13_disk.asm"
+%include "isr/int14_comm.asm"
+%include "isr/int15_at.asm"
+%include "isr/int16_keyboard.asm"
+%include "isr/int17.asm"
+%include "isr/int19.asm"
+%include "isr/int1a_rtc.asm"
 
 ; SPI controller for SD-card or W25Q128 flash ROM
-%include "drivers\spi.asm"
+%include "drivers/spi.asm"
 
 ; BIOS messages
 msg_reset:
@@ -656,7 +656,7 @@ abRegsMono:
 ; Do not move! Need to be placed in 0x1A6E
 	times 0x1A6E - $ + image_start db 0x90
 
-%include "data\cgafont.asm"
+%include "data/cgafont.asm"
 
 %endif
 

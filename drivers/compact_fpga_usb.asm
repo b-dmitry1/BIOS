@@ -13,7 +13,7 @@
 
 %define INIT_PACKET_DELAY		5
 
-%include "drivers\usb.asm"
+%include "drivers/usb.asm"
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	;; USB 1

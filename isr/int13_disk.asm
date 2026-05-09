@@ -2,11 +2,11 @@
 ;
 
 %if (USE_SPI_SDCARD)
-%include "drivers\sdcard.asm"
+%include "drivers/sdcard.asm"
 %endif
 
 %if (USE_IDE_HDD == 1)
-%include "drivers\ide.asm"
+%include "drivers/ide.asm"
 %endif
 
 int13:
@@ -16,7 +16,7 @@ int13:
 	or word [bp+6], 0x0200
 	pop bp
 %if (HYPER_13H == 1)
-%include "drivers\hdd_hyper.asm"
+%include "drivers/hdd_hyper.asm"
 	iret
 %else
 

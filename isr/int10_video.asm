@@ -113,9 +113,9 @@ int10_done_no_update:
 	pop ds
 	iret
 
-%include "isr\int10_video_setmode.asm"
+%include "isr/int10_video_setmode.asm"
 
-%include "isr\int10_video_text.asm"
+%include "isr/int10_video_text.asm"
 
 int10_ega_12:
 	cmp bl, 0x10
@@ -353,4 +353,4 @@ int10_get_state_info:
 	mov al, 0x1b
 	jmp int10_done_no_update
 
-%include "isr\int10_video_svga.asm"
+%include "isr/int10_video_svga.asm"

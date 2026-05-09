@@ -1,5 +1,5 @@
 
-%include "data\video_init.asm"
+%include "data/video_init.asm"
 
 ; TODO: Add Bochs's specific values to replace their own VGA BIOS
 
