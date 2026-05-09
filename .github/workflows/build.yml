@@ -1,0 +1,24 @@
+name: Build BIOS
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install NASM
+        uses: ilammy/setup-nasm@v1
+        with:
+          version: 2.16.01
+
+      - name: Assemble BIOS
+        run: nasm -f bin bios.asm -o bios.bin
+
+      - name: Upload BIOS Binary
+        uses: actions/artifact/upload@v4
+        with:
+          name: bios-binary
+          path: bios.bin
