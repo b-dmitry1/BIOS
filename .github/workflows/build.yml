@@ -1,6 +1,9 @@
-name: Build BIOS
+name: Build and release BIOS
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -8,20 +11,42 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [standard]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install NASM
         uses: ilammy/setup-nasm@v1
-        with:
-          version: 2.16.01
 
       - name: Assemble BIOS
-        run: nasm bios.asm -o bios.bin
+        run: |
+          FLAGS=""
+          nasm -f bin bios.asm $FLAGS -o bios_${{ matrix.config }}.bin
 
-      - name: Upload BIOS Binary
+      - name: Check Size (Strict 8192 bytes)
+        run: |
+          FILE="bios_${{ matrix.config }}.bin"
+          SIZE=$(stat -c%s "$FILE")
+          if [ "$SIZE" -ne 8192 ]; then
+            echo "ERROR: $FILE is $SIZE bytes. Expected exactly 8192!"
+            exit 1
+          fi
+          echo "Success: $FILE is exactly 8192 bytes."
+
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: bios-binary
-          path: bios.bin
+          name: bios-${{ matrix.config }}
+          path: bios_${{ matrix.config }}.bin
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: bios_${{ matrix.config }}.bin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
