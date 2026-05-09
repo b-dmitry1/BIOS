@@ -18,7 +18,7 @@ jobs:
           version: 2.16.01
 
       - name: Assemble BIOS
-        run: nasm -f bin bios.asm -o bios.bin
+        run: nasm bios.asm -o bios.bin
 
       - name: Upload BIOS Binary
         uses: actions/upload-artifact@v4
