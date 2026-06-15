@@ -23,13 +23,39 @@ Tested with a software:
 * Minix 1.x, 2.x
 * Most of DOS/Windows software and games working good
 
-### Compiling on Windows machine
+### Compiling on a Windows machine
 
 * Use Netwide Assembler (https://www.nasm.us/) to compile the source code.
 * Edit "config.inc" file to select features you need.
 * Launch "\_make.bat" file to create binaries.
 
 If your NASM location on disk is not "C:\nasm\nasm.exe" - please change the path to nasm.exe in "\_make.bat" file.
+
+### Compiling on a Linux machine
+
+* Edit "config.inc" file to select features you need. Enable USE_DEBUG_UART if you want to test it in QEMU.
+* Install nasm and qemu:
+```
+sudo apt update
+sudo apt install nasm qemu-system-x86
+```
+* Assemble and make 64 binary:
+```
+nasm bios.asm
+cat bios >bios64k
+cat bios >>bios64k
+cat bios >>bios64k
+cat bios >>bios64k
+cat bios >>bios64k
+cat bios >>bios64k
+cat bios >>bios64k
+cat bios >>bios64k
+```
+* Run in QEMU:
+```
+qemu-system-i386 -bios bios64k
+```
+In QEMU's "View" menu switch display to "serial0". There are should be a BIOS banner.
 
 ### Implemented functions and features
 * Minimal initialization
