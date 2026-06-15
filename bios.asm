@@ -67,6 +67,40 @@ normal_restart:
 	mov al, '1'
 	out DEBUG_UART, al
 
+%if (USE_DEBUG_UART == 1)
+	; Use simplified setup due to lack of space
+	; Configure COM1 (0x3F8) to 115200 8n1
+	; Note that we should not read RAM now so no stack is available here!
+	mov dx, 0x3fb
+	mov al, 0x83    ; DLAB on + 8n1
+	out dx, al
+
+	mov dx, 0x3f8
+	mov al, 0x01    ; Latch low
+	out dx, al
+
+	mov dx, 0x3f9
+	xor al, al      ; Latch high
+	out dx, al
+
+	mov dx, 0x3fb
+	mov al, 0x03    ; DLAB off
+	out dx, al
+
+	mov dx, 0x3f9
+	xor al, al      ; No interrupts
+	out dx, al
+
+uart_wait1:
+	mov dx, 0x3fd   ; LSR
+	in al, dx
+	test al, 0x20   ; Ready?
+	jz uart_wait1
+	sub dx, 5
+	mov al, '1'     ; Write '1'
+	out dx, al
+%endif
+
 	; Setup stack
 	xor ax, ax
 	mov ss, ax

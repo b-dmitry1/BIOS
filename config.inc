@@ -28,6 +28,9 @@
 ; Set to 1 if you use 80286 CPU and need protected mode exit on reset
 %define USE_PMODE_EXIT		0
 
+; Set to 1 to enable debug output to COM1 (port 0x3F8, 115200 8n1)
+%define USE_DEBUG_UART		0
+
 
 ; HDD cylinder count
 ; HDD size: HDD_CYLINDERS * 16 * 63 * 512 bytes

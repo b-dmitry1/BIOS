@@ -89,6 +89,20 @@ putch_tty:
 	cmp byte [video_mode], 3
 	jg putch_tty_graphic
 
+%if (USE_DEBUG_UART == 1)
+	push dx
+	push ax
+	mov dx, 0x3fd	; LSR
+putch_tty_wait1:
+	in al, dx
+	test al, 0x20	; Ready?
+	jz putch_tty_wait1
+	pop ax
+	sub dx, 5
+	out dx, al
+	pop dx
+%endif
+
 	cmp al, 13
 	je cr
 	cmp al, 10
