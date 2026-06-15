@@ -25,6 +25,8 @@
 ; Set to 1 if you have ROM Basic on 0xF6000 and wish to use it instead of OS
 %define RUN_ROM_BASIC		0
 
+; Set to 1 if you use 80286 CPU and need protected mode exit on reset
+%define USE_PMODE_EXIT		0
 
 
 ; HDD cylinder count

@@ -33,6 +33,7 @@ start:
 	mov ax, 0x40
 	mov ds, ax
 
+%if (USE_PMODE_EXIT == 1)
 	; Check if this restart is just an exit from protected mode
 	; and we need to resume execution of user program
 	mov ax, [pmode_exit_cs]
@@ -60,6 +61,7 @@ pmode_exit:
 	retf
 
 normal_restart:
+%endif
 
 	; Send '1' to debug port to notify that BIOS and debug console both working
 	mov al, '1'
