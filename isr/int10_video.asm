@@ -180,7 +180,6 @@ int10_vga_set_all_palette:
 	push dx
 	push si
 	mov si, dx
-	xor ch, ch
 	mov dx, 0x3C8
 	mov al, bl
 	out dx, al
