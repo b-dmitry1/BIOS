@@ -689,8 +689,8 @@ abRegsMono:
 
 %if (NO_CGA_GLYPHS != 1)
 ; CGA 8x8 font
-; Do not move! Need to be placed in 0x1A6E
-	times 0x1A6E - $ + image_start db 0x90
+; Do not move! Need to be placed in 0xFFA6E
+	times ROM_SIZE - 8192 + 0x1A6E - $ + image_start db 0x90
 
 %include "data/cgafont.asm"
 
@@ -718,10 +718,10 @@ hdd_sectors:
 
 
 	; Fill unused area with NOPs
-	times 8192 - 16 - $ + image_start db 0x90
+	times ROM_SIZE - 16 - $ + image_start db 0x90
 
 bootentry:
-	jmp (0F000h):start
+	jmp (START_SEGMENT):start
 	db	"08/29/87"
 	db	0x00
 	db	0xFC		; Machine type (XT)

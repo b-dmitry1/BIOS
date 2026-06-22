@@ -8,7 +8,12 @@
 ; Set CPU type here
 %define CPU			CPU_X86
 
-
+; Start segment depends on a ROM size:
+; For 2764 (8K) use 0xFE00
+; For 27256 (32K) use 0xF800
+; For 27512 (64K) use 0xF000
+%define START_SEGMENT		0xFE00
+%define ROM_SIZE		8192
 
 ; Extended RAM size in KB
 %define EXT_RAM_SIZE		7168
