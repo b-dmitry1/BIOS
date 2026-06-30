@@ -34,28 +34,25 @@ If your NASM location on disk is not "C:\nasm\nasm.exe" - please change the path
 ### Compiling on a Linux machine
 
 * Edit "config.inc" file to select features you need. Enable USE_DEBUG_UART if you want to test it in QEMU.
+* In "config.inc" file set START_SEGMENT to 0xF000 and ROM_SIZE to 65536. QEMU requires 64 KB BIOS, and this will add 56 KB of empty space to your binary.
 * Install nasm and qemu:
 ```
 sudo apt update
 sudo apt install nasm qemu-system-x86
 ```
-* Assemble and make 64 binary:
+* Compile BIOS with nasm:
 ```
 nasm bios.asm
-cat bios >bios64k
-cat bios >>bios64k
-cat bios >>bios64k
-cat bios >>bios64k
-cat bios >>bios64k
-cat bios >>bios64k
-cat bios >>bios64k
-cat bios >>bios64k
 ```
 * Run in QEMU:
 ```
-qemu-system-i386 -bios bios64k
+qemu-system-i386 -bios bios -machine isapc -vga std
 ```
-In QEMU's "View" menu switch display to "serial0". There are should be a BIOS banner.
+The font will look different than on a modern computers: this is because we are loading only first 128 CGA glyphs 8x8 to a 8x16 VGA glyph table.
+The only way to load such a font is to stretch it vertically to double its size.
+Complete 8x16 font requires 4 KB of ROM space and this is too expensive for this tiny BIOS.
+
+If you want to test a serial port (COM1) output: in QEMU's "View" menu switch display to "serial0". There are should be a BIOS banner.
 
 ### Implemented functions and features
 * Minimal initialization

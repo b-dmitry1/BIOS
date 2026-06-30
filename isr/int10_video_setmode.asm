@@ -207,6 +207,29 @@ done_load_font:
 
 	ret
 
+clear_framebuffer:
+	mov al, [video_mode]
+	test al, 0x80
+	jnz clear_framebuffer_done
+	mov ax, 0xA000
+	mov es, ax
+	xor di, di
+	mov cx, 32768
+	xor ax, ax
+	rep stosw
+	mov ax, 0xB000
+	mov es, ax
+	xor di, di
+	mov cx, 32768
+	mov ax, 0x720
+	cmp byte [video_mode], 3
+	jle fill_7
+	xor ax, ax
+fill_7:
+	rep stosw
+clear_framebuffer_done:
+	ret
+
 colors:
 	db 0, 0, 0
 	db 0, 0, 42
@@ -232,30 +255,6 @@ set_video_mode:
 	push dx
 
 	mov [video_mode], al
-
-	test al, 0x80
-	jnz set_video_mode_done_clear_fb
-
-	; Clear framebuffer
-	mov ax, 0xA000
-	mov es, ax
-	xor di, di
-	mov cx, 32768
-	xor ax, ax
-	rep stosw
-	mov ax, 0xB000
-	mov es, ax
-	xor di, di
-	mov cx, 32768
-	mov ax, 0x720
-	cmp byte [video_mode], 3
-	jle fill_7
-	xor ax, ax
-fill_7:	
-	rep stosw
-
-	mov al, [video_mode]
-set_video_mode_done_clear_fb:
 	and al, 0x7F
 
 	; FPGA or emulator video mode register
@@ -304,6 +303,12 @@ defaultpalette:
 	inc si
 	out dx, al
 	loop defaultpalette
+
+	call clear_framebuffer
+
+	mov al, [video_mode]
+	and al, 0x7F
+	mov [video_mode], al
 
 	pop dx
 	pop cx
