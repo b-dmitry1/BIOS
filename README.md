@@ -44,9 +44,10 @@ sudo apt install nasm qemu-system-x86
 ```
 nasm bios.asm
 ```
+* Download and unzip freedos.img disk image from "e86r" project or use your own image.
 * Run in QEMU:
 ```
-qemu-system-i386 -bios bios -machine isapc -vga std
+qemu-system-i386 -bios bios -machine isapc -vga std -drive file=freedos.img,format=raw,bus=0,unit=0,media=disk
 ```
 The font will look different than on a modern computers: this is because we are loading only first 128 CGA glyphs 8x8 to a 8x16 VGA glyph table.
 The only way to load such a font is to stretch it vertically to double its size.
@@ -74,4 +75,4 @@ If you want to test a serial port (COM1) output: in QEMU's "View" menu switch di
 * Int 13h (BIOS disk) supports only reset/read/write functions
 * Internal video BIOS doesn't support printing text in graphic mode
 * Video adapter initialization incomplete so will not work properly with a real VGA chips without OEM BIOS
-
+* QEMU's VGA adapter will only work in 0x03 (text, 16 color, 80x25 chars) and 0x13 (graphics, 256 color, 320x200) video modes due to palette and programming sequence issues in other modes.

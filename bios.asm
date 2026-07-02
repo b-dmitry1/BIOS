@@ -230,6 +230,8 @@ no_rom:
 	mov al, '5'
 	out DEBUG_UART, al
 
+	call i8042_init
+
 	mov al, 13
 	out DEBUG_UART, al
 	mov al, 10
@@ -586,6 +588,8 @@ empty_int:
 
 ; SPI controller for SD-card or W25Q128 flash ROM
 %include "drivers/spi.asm"
+
+%include "drivers/i8042.asm"
 
 ; BIOS messages
 msg_reset:
