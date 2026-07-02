@@ -4,7 +4,7 @@ i8042_init:
 	out 0x64, al
 	call i8042_wait
 	mov al, 0x41    ; Bit 6: select scancode set 1, bit 0: enable IRQ1
-	out 0xA0, al
+	out 0x60, al
 	ret
 
 i8042_wait:
